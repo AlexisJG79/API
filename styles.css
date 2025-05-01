@@ -1,0 +1,118 @@
+body{
+background-image: url('Fondos/fondo3.webp');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+min-height: 100vh;
+background-attachment: fixed; /* hace que el fondo no se mueva */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header{
+  background-image: url('Fondos/fondoheader5.jpg');
+  background-size: cover;          
+  background-repeat: no-repeat;    
+  background-position: center; 
+  height: auto;                   
+  width: 100%;                    
+  padding: 0 20px;
+  
+
+}
+
+.logo{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo img{
+  height: 80px;
+  width: 150px;
+  padding: 0 30px;
+}
+
+.logob img{
+  height: auto;
+  width: 500px;
+}
+
+.logob{
+  display: flex;
+  justify-content: center;
+}
+
+#personajes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 120px;
+  justify-content: center;
+  padding: 20px;
+  padding-top: 60px;
+  }
+
+  .personaje{
+    min-height: 400px;
+    width: 250px;
+  }
+  
+  .personaje:hover img{
+    transform: scale(1.2);
+  }
+
+  .personaje img{
+  width: 100%;
+  height: 350px;
+  object-fit: contain;
+  margin-top: -50px; /* Esto es lo que hace que sobresalga */
+  position: relative;
+  transition: transform 0.5s ease; /* Esto hace que la imagen se agrande */
+}
+
+
+/* efecto de giro */
+.inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.personaje.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 2px;
+  
+}
+
+.front {
+  background-image: url(Fondos/card-fondo2.jpg);
+  background-size: cover;
+  background-position: center;
+  color: black;
+}
+
+.back {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  transform: rotateY(180deg);
+  overflow: hidden;
+}
