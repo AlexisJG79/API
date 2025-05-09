@@ -116,3 +116,25 @@ header{
   transform: rotateY(180deg);
   overflow: hidden;
 }
+
+.transformaciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.transformacion {
+  width: 120px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.transformacion img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.transformacion p {
+  font-size: 12px;
+  margin-top: 5px;
+}

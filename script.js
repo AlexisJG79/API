@@ -1,3 +1,4 @@
+
 let page = 1;
 let load = false;
 let buscando = false;
@@ -41,25 +42,64 @@ input.addEventListener("input", () => {
     }
 });
 
-function crearTarjeta(personaje) {
+// Función para obtener todas las transformaciones
+function obtenerTransformaciones() {
+    return fetch('https://dragonball-api.com/api/transformations/')
+        .then(res => res.json())
+        .then(data => {
+            console.log('Transformaciones obtenidas:', data); // Verificar las transformaciones obtenidas
+            return data;
+        })
+        .catch(error => {
+            console.error("Error al obtener transformaciones:", error);
+            return []; // Devuelve un arreglo vacío si hay error
+        });
+}
+
+// Función para crear la tarjeta del personaje
+function crearTarjeta(personaje, transformaciones) {
     const div = document.createElement("div");
     div.classList.add("personaje");
+
+    // Filtrar las transformaciones que corresponden a este personaje
+    const transformacionesPersonaje = transformaciones.filter(trans => 
+        trans.name.toLowerCase().includes(personaje.name.toLowerCase())
+    );
+
+    // Crear el contenido del reverso con transformaciones
+    const transformacionesHTML = transformacionesPersonaje.length > 0
+        ? transformacionesPersonaje.map(trans => {
+            return `
+                <div class="transformacion">
+                    <img src="${trans.image}" alt="${trans.name}">
+                    <p>${trans.name}</p>
+                    <p><strong>Ki:</strong> ${trans.ki}</p>
+                </div>
+            `;
+        }).join('')
+        : '<p>No tiene transformaciones.</p>';
 
     div.innerHTML = `
         <div class="inner">
             <div class="front">
                 <img src="${personaje.image}" alt="${personaje.name}">
                 <h2>${personaje.name}</h2>
+                <h3>Transformaciones:</h3>
+                    ${transformacionesHTML}
             </div>
             <div class="back">
-                <p>${personaje.name}</p>
+                <p><strong>Nombre:</strong> ${personaje.name}</p>
                 <p><strong>Género:</strong> ${personaje.gender}</p>
                 <p><strong>Raza:</strong> ${personaje.race}</p>
                 <p><strong>KI:</strong> ${personaje.ki}</p>
+                <div class="transformaciones">
+                    
+                </div>
             </div>
         </div>
     `;
 
+    // Manejo de flip de la tarjeta al hacer clic
     div.addEventListener("click", () => {
         div.classList.toggle("flipped");
     });
@@ -67,6 +107,7 @@ function crearTarjeta(personaje) {
     contenedor.appendChild(div);
 }
 
+// Función para cargar los personajes
 function cargarPersonajes() {
     if (load || buscando) return;
     load = true;
@@ -74,7 +115,11 @@ function cargarPersonajes() {
     fetch(`https://dragonball-api.com/api/characters?page=${page}`)
         .then(res => res.json())
         .then(data => {
-            data.items.forEach(personaje => crearTarjeta(personaje));
+            console.log('Personajes obtenidos:', data); // Verificar los personajes obtenidos
+            // Obtener las transformaciones antes de mostrar los personajes
+            obtenerTransformaciones().then(transformaciones => {
+                data.items.forEach(personaje => crearTarjeta(personaje, transformaciones));
+            });
             page++;
             load = false;
         })
@@ -84,6 +129,7 @@ function cargarPersonajes() {
         });
 }
 
+// Función de búsqueda de personajes
 function busquedaPersonajes(texto) {
     contenedor.innerHTML = "<p>Buscando...</p>";
     buscando = true;
@@ -105,7 +151,10 @@ function busquedaPersonajes(texto) {
                 return;
             }
 
-            filtrados.forEach(p => crearTarjeta(p));
+            // Obtener las transformaciones antes de mostrar los personajes filtrados
+            obtenerTransformaciones().then(transformaciones => {
+                filtrados.forEach(p => crearTarjeta(p, transformaciones));
+            });
         })
         .catch(error => {
             console.error("Error al buscar personaje:", error);
